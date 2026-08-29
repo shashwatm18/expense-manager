@@ -1,0 +1,6 @@
+{
+  "name": "Local Expense Manager",
+  "description": "A 3-tier local CRUD application for tracking and managing expenses using React, Node.js Express, and PostgreSQL.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
