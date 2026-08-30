@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: expense-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: expense_db
+    volumes:
+      - expense_postgres_data:/var/lib/postgresql/data
+    networks:
+      - expense-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d expense_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: expense-backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/expense_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - expense-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: expense-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - expense-network
+
+networks:
+  expense-network:
+    driver: bridge
+
+volumes:
+  expense_postgres_data:
