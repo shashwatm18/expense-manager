@@ -1,145 +1,185 @@
-# 3-Tier Local Expense Manager (React + Node.js + PostgreSQL)
+# 3-Tier Local Expense Manager
 
-A complete, production-ready **3-Tier CRUD application** for tracking personal and organizational expenses. Built entirely for **local execution** without requiring any external cloud services, third-party hosting, or Docker containers.
+A complete **3-tier CRUD application** for tracking personal and organizational expenses.
+
+The application is built using **React, Node.js/Express, and PostgreSQL** and provides expense management, category analytics, budget tracking, filtering, sorting, and data export functionality.
 
 ---
 
-## 🏛️ 3-Tier Architecture Overview
+## 🏛️ 3-Tier Architecture
 
-```
+The application follows a 3-tier architecture:
+
+```text
 +-------------------------------------------------------------+
 |                     1. PRESENTATION TIER                    |
-|  - React 19 + TypeScript + Tailwind CSS                     |
-|  - Single Page Interface (SPA) with responsive data tables  |
-|  - Real-time search, multi-field filtering & sort controls  |
-|  - Category analytics, budget tracking, and CSV/JSON export |
+|                                                             |
+|  React + TypeScript + Tailwind CSS                          |
+|  Responsive user interface                                  |
+|  Expense tables, search, filtering and sorting              |
+|  Category analytics and budget tracking                     |
+|  CSV / JSON export                                           |
 +------------------------------▲------------------------------+
-                               │ HTTP / REST APIs (/api/*)
+                               |
+                               | HTTP / REST APIs
+                               | /api/*
                                ▼
 +-------------------------------------------------------------+
 |                     2. APPLICATION TIER                     |
-|  - Node.js + Express.js Web Server                          |
-|  - RESTful API routing (/api/expenses, /api/db, /api/stats) |
-|  - Request validation, error handling, parameter parsing    |
-|  - PostgreSQL Connection Pool Manager (pg.Pool)             |
+|                                                             |
+|  Node.js + Express.js                                       |
+|  RESTful API                                                 |
+|  Request validation and error handling                      |
+|  PostgreSQL connection pool                                  |
 +------------------------------▲------------------------------+
-                               │ TCP / SQL Protocol (Port 5432)
+                               |
+                               | TCP / SQL
+                               | Port 5432
                                ▼
 +-------------------------------------------------------------+
-|                        3. DATA TIER                         |
-|  - PostgreSQL Relational Database (Local Instance)          |
-|  - Relational Schema: `categories`, `expenses`              |
-|  - High-performance B-Tree indexes, foreign keys, triggers  |
-|  - DDL Schema: `database/schema.sql`                        |
+|                         3. DATA TIER                        |
+|                                                             |
+|  PostgreSQL                                                  |
+|  Relational database                                         |
+|  Categories and expenses                                     |
+|  Database schema and seed data                               |
 +-------------------------------------------------------------+
 ```
 
 ---
 
-## 📋 Prerequisites
+## 🚀 Features
 
-Before starting, ensure the following software is installed on your local machine:
-
-1. **Node.js**: Version `18.x` or higher ([Download Node.js](https://nodejs.org/))
-2. **npm**: Version `9.x` or higher (bundled with Node.js)
-3. **PostgreSQL**: Version `14.x`, `15.x`, or `16.x` ([Download PostgreSQL](https://www.postgresql.org/download/))
-
----
-
-## 🚀 Step-by-Step Local Setup Guide (Without Docker)
-
-Follow these direct steps to configure and run the full stack locally on your computer.
-
-### Step 1: Install PostgreSQL Locally
-
-Choose your operating system:
-
-#### **macOS (via Homebrew)**
-```bash
-# Install PostgreSQL
-brew install postgresql@16
-
-# Start the PostgreSQL background service
-brew services start postgresql@16
-```
-
-#### **Ubuntu / Debian Linux**
-```bash
-# Update package repositories and install PostgreSQL
-sudo apt update
-sudo apt install -y postgresql postgresql-contrib
-
-# Start and enable the PostgreSQL service
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
-```
-
-#### **Windows (via Winget or Official Installer)**
-```powershell
-# Using Windows Package Manager (Winget)
-winget install PostgreSQL.PostgreSQL
-
-# Or download the graphical installer from:
-# https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
-```
+- Expense management
+- Category management
+- Expense creation, editing and deletion
+- Expense search
+- Multi-field filtering
+- Sorting
+- Category-wise analytics
+- Budget tracking
+- Payment method analysis
+- CSV export
+- JSON export
+- REST API
+- PostgreSQL database
+- Responsive React interface
 
 ---
 
-### Step 2: Create the Local PostgreSQL Database & User
+## 🛠️ Technology Stack
 
-Open your terminal and create the database named `expense_db`:
+### Frontend
 
-#### **macOS / Linux:**
-```bash
-# Option A: Using createdb command
-createdb expense_db
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
 
-# Option B: Using psql command line interface
-psql -U postgres -c "CREATE DATABASE expense_db;"
-```
+### Backend
 
-> **Tip:** If your local PostgreSQL user has a password (e.g. `postgres`), you can set or verify it with:
-> ```bash
-> psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
-> ```
+- Node.js
+- Express.js
+- TypeScript
+- esbuild
 
-#### **Windows (Command Prompt / PowerShell):**
-```cmd
-"C:\Program Files\PostgreSQL\16\bin\psql.exe" -U postgres -c "CREATE DATABASE expense_db;"
+### Database
+
+- PostgreSQL
+- SQL
+- `pg` PostgreSQL client
+
+---
+
+## 📁 Project Structure
+
+```text
+local-expense-manager/
+│
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+│
+├── server/
+│   ├── db.ts
+│   └── init-db.ts
+│
+├── src/
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── types.ts
+│
+├── index.html
+├── server.ts
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── .gitignore
+└── README.md
 ```
 
 ---
 
-### Step 3: Configure Local Environment Variables
+# 📋 Prerequisites
 
-1. In the root directory of this project, create a `.env` file from `.env.example`:
+Before running the application locally, install:
+
+- Node.js
+- npm
+- PostgreSQL
+
+Verify Node.js and npm:
 
 ```bash
-cp .env.example .env
+node --version
+npm --version
 ```
 
-2. Open `.env` and verify your local PostgreSQL credentials:
+Verify PostgreSQL:
+
+```bash
+psql --version
+```
+
+---
+
+# ⚙️ Environment Configuration
+
+Create a `.env` file in the project root.
+
+Example:
 
 ```env
-# Application Port
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/expense_db
 PORT=3000
+```
 
-# Option 1: Full Connection URL
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/expense_db"
+The actual `.env` file should not be committed to Git.
 
-# Option 2: Parameter-based connection
-PGHOST="localhost"
-PGPORT=5432
-PGUSER="postgres"
-PGPASSWORD="postgres"
-PGDATABASE="expense_db"
+An example environment configuration can be maintained separately as:
+
+```text
+.env.example
 ```
 
 ---
 
-### Step 4: Install Dependencies
+# 📦 Installation
 
-Run `npm install` in the project root directory to install all client and server dependencies:
+Clone the repository:
+
+```bash
+git clone <YOUR-GITHUB-REPOSITORY-URL>
+```
+
+Enter the project directory:
+
+```bash
+cd local-expense-manager
+```
+
+Install dependencies:
 
 ```bash
 npm install
@@ -147,153 +187,439 @@ npm install
 
 ---
 
-### Step 5: Initialize the PostgreSQL Database Schema
+# 🗄️ Database Setup
 
-Run the automated database initializer script. This reads `database/schema.sql`, creates all tables, triggers, and indexes in your local PostgreSQL database, and seeds initial data:
+The database schema is available in:
 
-```bash
-npm run db:init
+```text
+database/schema.sql
 ```
 
-**Expected output:**
+Seed data is available in:
+
+```text
+database/seed.sql
 ```
-----------------------------------------------------
-🐘 3-Tier Expense Manager - Database Initializer
-----------------------------------------------------
-Connecting to PostgreSQL at localhost:5432/expense_db (User: postgres)...
-✓ Successfully connected to PostgreSQL instance.
-Reading SQL Schema from: .../database/schema.sql
-Executing DDL statements (Creating tables, indexes, triggers)...
-✓ Schema and indexes initialized successfully.
-✓ Seed data inserted successfully.
-✓ Total expenses now in database: 15
-----------------------------------------------------
-🎉 Database initialization complete. Ready to run "npm run dev".
-----------------------------------------------------
-```
+
+The application also provides database initialization functionality through the backend.
 
 ---
 
-### Step 6: Start the Local Application
+# ▶️ Running the Application
 
-Start the integrated development server (which boots the Express API and mounts the React frontend):
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-Open your browser and navigate to:
-👉 **[http://localhost:3000](http://localhost:3000)**
+The application backend runs on:
+
+```text
+http://localhost:3000
+```
+
+The frontend is served through the Vite development environment.
 
 ---
 
-## 🗄️ Database Schema & DDL Details
+# 🔨 Build Commands
 
-The data tier is defined in `database/schema.sql`.
+The project provides separate build commands for the frontend and backend.
 
-### Tables
-
-#### 1. `categories` Table
-| Column | Data Type | Constraints | Description |
-|---|---|---|---|
-| `id` | `SERIAL` | `PRIMARY KEY` | Unique Category Identifier |
-| `name` | `VARCHAR(50)` | `NOT NULL, UNIQUE` | Name (e.g. Food & Dining, Travel) |
-| `color` | `VARCHAR(20)` | `DEFAULT '#64748b'` | Hex color for UI charts |
-| `icon` | `VARCHAR(30)` | `DEFAULT 'Tag'` | Icon key identifier |
-| `created_at` | `TIMESTAMP WITH TIME ZONE` | `DEFAULT CURRENT_TIMESTAMP` | Creation timestamp |
-
-#### 2. `expenses` Table
-| Column | Data Type | Constraints | Description |
-|---|---|---|---|
-| `id` | `SERIAL` | `PRIMARY KEY` | Unique Expense Identifier |
-| `title` | `VARCHAR(120)` | `NOT NULL` | Expense name or payee |
-| `amount` | `NUMERIC(12, 2)` | `NOT NULL, CHECK (amount > 0)` | Monetary expense value |
-| `category_id` | `INTEGER` | `REFERENCES categories(id)` | Foreign key to category |
-| `category_name`| `VARCHAR(50)` | `NOT NULL` | Denormalized category name |
-| `date` | `DATE` | `NOT NULL DEFAULT CURRENT_DATE` | Transaction date |
-| `payment_method` | `VARCHAR(50)`| `NOT NULL DEFAULT 'Credit Card'` | Credit Card, Cash, etc. |
-| `status` | `VARCHAR(20)` | `CHECK (status IN ('Paid','Pending','Reimbursed'))` | Payment status |
-| `notes` | `TEXT` | `NULL` | Optional memo / details |
-| `created_at` | `TIMESTAMP WITH TIME ZONE` | `DEFAULT CURRENT_TIMESTAMP` | Record creation time |
-| `updated_at` | `TIMESTAMP WITH TIME ZONE` | `DEFAULT CURRENT_TIMESTAMP` | Auto-updated via trigger |
-
-### Indexes & Performance
-- `idx_expenses_date`: Fast date-range filtering and temporal sorting.
-- `idx_expenses_category`: Rapid aggregation by spending category.
-- `idx_expenses_payment_method`: Filter by payment mode.
-- `idx_expenses_amount`: Range querying and sorting by value.
-
----
-
-## 📡 REST API Reference
-
-The Application Tier exposes the following endpoints under `/api`:
-
-### 1. Expense Operations
-| Method | Endpoint | Description | Query / Body Parameters |
-|---|---|---|---|
-| `GET` | `/api/expenses` | List & filter expenses | `search`, `category`, `payment_method`, `status`, `startDate`, `endDate`, `minAmount`, `maxAmount`, `sortBy`, `order`, `page`, `limit` |
-| `GET` | `/api/expenses/:id` | Get single expense | Path: `id` (integer) |
-| `POST` | `/api/expenses` | Create new expense | Body: `{ title, amount, category_name, date, payment_method, status, notes }` |
-| `PUT` | `/api/expenses/:id` | Update expense | Body: Partial expense fields |
-| `DELETE` | `/api/expenses/:id` | Delete expense | Path: `id` (integer) |
-
-### 2. Category & Analytics Operations
-| Method | Endpoint | Description | Sample Response |
-|---|---|---|---|
-| `GET` | `/api/expenses/stats` | Aggregated metrics | `{ totalSpent, expenseCount, averageExpense, byCategory, byPaymentMethod, byMonth }` |
-| `GET` | `/api/expenses/categories` | List all categories | `[{ id: 1, name: "Food & Dining", color: "#f97316" }, ...]` |
-
-### 3. Database Diagnostics & Maintenance
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/api/db/status` | Inspect live PostgreSQL connection status, latency, row counts |
-| `GET` | `/api/db/ping` | Ping connection test |
-| `POST` | `/api/db/init` | Execute DDL schema creation directly |
-| `POST` | `/api/db/seed` | Seed default sample expense records |
-| `GET` | `/api/db/schema` | Read raw `schema.sql` file |
-
----
-
-## 🛠️ Troubleshooting Local Setup
-
-### 1. `ECONNREFUSED 127.0.0.1:5432`
-- **Cause**: The PostgreSQL service is not currently running.
-- **Fix**:
-  - macOS: `brew services restart postgresql@16`
-  - Linux: `sudo systemctl restart postgresql`
-  - Windows: Open Services (`services.msc`) and start `postgresql-x64-16`.
-
-### 2. `password authentication failed for user "postgres"`
-- **Cause**: The password in `.env` doesn't match your local PostgreSQL `postgres` user password.
-- **Fix**: Reset the password with:
-  ```bash
-  psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'postgres';"
-  ```
-  Then set `PGPASSWORD="postgres"` in your `.env`.
-
-### 3. `database "expense_db" does not exist`
-- **Fix**: Run:
-  ```bash
-  psql -U postgres -c "CREATE DATABASE expense_db;"
-  ```
-  Then run `npm run db:init`.
-
----
-
-## 📦 Production Build & Start
-
-To build and run in production mode:
+## Build Frontend
 
 ```bash
-# 1. Compile the React client and bundle the Express server into dist/
-npm run build
+npm run build:frontend
+```
 
-# 2. Run the bundled standalone server
-npm run start
+The production frontend files are generated in:
+
+```text
+dist/
+```
+
+## Build Backend
+
+```bash
+npm run build:backend
+```
+
+The backend production bundle is generated as:
+
+```text
+dist/server.cjs
+```
+
+## Start Production Backend
+
+```bash
+npm start
 ```
 
 ---
 
-## 📄 License
-MIT License. Built for local offline-first 3-tier application workflows.
+# 🧪 Lint / Type Checking
+
+Run TypeScript type checking using:
+
+```bash
+npm run lint
+```
+
+---
+
+# 🔌 API
+
+The backend provides REST APIs for the application.
+
+Main API areas include:
+
+```text
+/api/expenses
+/api/db
+/api/stats
+/api/health
+```
+
+### Health Check
+
+The backend provides:
+
+```text
+GET /api/health
+```
+
+Example:
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+A successful response confirms that the backend service is running.
+
+---
+
+# 🐘 PostgreSQL Database
+
+The application uses PostgreSQL as its data tier.
+
+The main database entities include:
+
+```text
+categories
+expenses
+```
+
+The database schema is defined in:
+
+```text
+database/schema.sql
+```
+
+Sample data is provided through:
+
+```text
+database/seed.sql
+```
+
+The backend uses a PostgreSQL connection pool for database communication.
+
+---
+
+# 🏗️ Production Containerization
+
+The application can also be deployed using Docker.
+
+The Docker implementation uses separate Dockerfiles for the frontend and backend:
+
+```text
+Dockerfile.frontend
+Dockerfile.backend
+```
+
+The Dockerized deployment consists of:
+
+```text
+React + Nginx
+       ↓
+Node.js + Express
+       ↓
+PostgreSQL
+```
+
+Both frontend and backend use multi-stage Docker builds.
+
+The frontend uses Nginx as the production runtime, while the backend uses Node.js for the production runtime.
+
+---
+
+# 🐳 Docker Compose
+
+The complete application can be orchestrated using:
+
+```text
+docker-compose.yml
+```
+
+Start the complete stack:
+
+```bash
+docker compose up -d
+```
+
+Check running services:
+
+```bash
+docker compose ps
+```
+
+Stop the services:
+
+```bash
+docker compose down
+```
+
+The Docker deployment uses:
+
+- Frontend container
+- Backend container
+- PostgreSQL container
+- Custom Docker network
+- PostgreSQL named volume
+- PostgreSQL health check
+
+---
+
+# 🌐 Docker Network Architecture
+
+The Dockerized application uses service names for internal communication.
+
+```text
+Frontend / Nginx
+       |
+       | backend:3000
+       v
+Backend / Express
+       |
+       | postgres:5432
+       v
+PostgreSQL
+```
+
+The frontend does not use `localhost` to communicate with the backend inside Docker.
+
+The backend communicates with PostgreSQL using the PostgreSQL Compose service name.
+
+---
+
+# 💾 Database Persistence
+
+PostgreSQL data is stored using a Docker named volume.
+
+This allows database data to survive container recreation.
+
+The persistence can be verified using:
+
+```bash
+docker compose down
+docker compose up -d
+```
+
+and then checking the database records again.
+
+---
+
+# 📚 Documentation
+
+Additional DevOps documentation is available in the `docs/` directory.
+
+### Git Documentation
+
+```text
+docs/GIT_README.md
+```
+
+Contains information about:
+
+- Git workflow
+- Meaningful commits
+- Repository hygiene
+- `.gitignore`
+- Sensitive files
+- Git verification
+
+### Docker Documentation
+
+```text
+docs/DOCKER_README.md
+```
+
+Contains information about:
+
+- Dockerfiles
+- Multi-stage builds
+- Image optimization
+- Nginx reverse proxy
+- Docker Compose
+- Docker networking
+- PostgreSQL persistence
+- Health checks
+- EC2 deployment
+- Security considerations
+
+---
+
+# ☁️ AWS EC2 Deployment
+
+The containerized application can be deployed on an AWS EC2 instance with Docker installed.
+
+The production deployment follows:
+
+```text
+Internet
+   |
+   | HTTP :80
+   v
+AWS EC2
+   |
+   | Docker Network
+   |
+   +--> Frontend / Nginx
+   |
+   +--> Backend / Node.js
+   |
+   +--> PostgreSQL
+            |
+            +--> Named Volume
+```
+
+Only the required public application port is exposed to external users, while backend and database communication remains internal to Docker.
+
+---
+
+# 🔐 Security
+
+The project follows basic security practices:
+
+- Environment files containing credentials are excluded from Git.
+- `.gitignore` prevents sensitive configuration from being committed.
+- PostgreSQL does not need to be publicly exposed.
+- Backend and database services communicate through the internal Docker network.
+- Production backend installation uses only production dependencies.
+- Docker containers communicate using service names instead of hard-coded IP addresses.
+
+---
+
+# 🔀 Git Repository
+
+The project is maintained using Git with incremental and meaningful commits.
+
+The development history includes separate commits for major changes such as:
+
+```text
+Initial Commit
+Add system architecture diagram
+Separate frontend and backend build scripts
+Add frontend multi-stage Dockerfile
+Add backend multi-stage Dockerfile
+Add Nginx reverse proxy configuration
+Add Docker build context exclusions
+Add npm lockfile for reproducible builds
+Add Docker Compose orchestration
+Add Git and Docker documentation
+```
+
+This provides a clear history of the application's development and Dockerization process.
+
+---
+
+# 📌 Useful Commands
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Development
+
+```bash
+npm run dev
+```
+
+### Frontend build
+
+```bash
+npm run build:frontend
+```
+
+### Backend build
+
+```bash
+npm run build:backend
+```
+
+### Production backend
+
+```bash
+npm start
+```
+
+### Type checking
+
+```bash
+npm run lint
+```
+
+### Docker Compose
+
+```bash
+docker compose up -d
+```
+
+```bash
+docker compose ps
+```
+
+```bash
+docker compose down
+```
+
+### Docker logs
+
+```bash
+docker compose logs backend
+```
+
+```bash
+docker compose logs frontend
+```
+
+```bash
+docker compose logs postgres
+```
+
+---
+
+# 👨‍💻 Development
+
+This project was developed as a 3-tier application and subsequently containerized and deployed as part of the DevOps implementation.
+
+The project demonstrates the integration of:
+
+- Frontend development
+- Backend API development
+- Relational database management
+- Containerization
+- Container orchestration
+- Docker networking
+- Persistent storage
+- Cloud deployment
+- Git-based version control
+
+---
+
+# 📄 License
+
+This project is intended for educational and development purposes.
