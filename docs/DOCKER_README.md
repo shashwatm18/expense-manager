@@ -225,31 +225,13 @@ This reduces unnecessary data transferred to the Docker build process.
 
 ---
 
-# Final Image Sizes
+## Final Image Sizes
 
-The final image sizes were measured using:
-
-```bash
-docker images
-```
-
-The frontend image was approximately:
-
-```text
-63.1 MB
-```
-
-The backend image was approximately:
-
-```text
-390 MB
-```
-
-The frontend image remains small because the production stage contains only Nginx and the generated static React files.
-
-The backend image is larger because it contains the Node.js runtime and production dependencies required by the Express application.
-
----
+| Image | Size |
+|---|---:|
+| `expense-manager-frontend` | ~93.8 MB |
+| `expense-manager-backend` | ~390 MB |
+| `postgres:16` | ~451 MB |
 
 # Nginx Reverse Proxy
 
@@ -562,79 +544,6 @@ docker compose exec postgres \
 
 ---
 
-# Useful Docker Commands
-
-### Build
-
-```bash
-docker compose build
-```
-
-### Start
-
-```bash
-docker compose up -d
-```
-
-### Stop
-
-```bash
-docker compose down
-```
-
-### View services
-
-```bash
-docker compose ps
-```
-
-### View backend logs
-
-```bash
-docker compose logs backend
-```
-
-### View frontend logs
-
-```bash
-docker compose logs frontend
-```
-
-### View PostgreSQL logs
-
-```bash
-docker compose logs postgres
-```
-
-### View images
-
-```bash
-docker images
-```
-
-### View image history
-
-```bash
-docker history expense-manager-frontend
-```
-
-```bash
-docker history expense-manager-backend
-```
-
-### View volumes
-
-```bash
-docker volume ls
-```
-
-### View networks
-
-```bash
-docker network ls
-```
-
----
 
 # Security Considerations
 
@@ -690,20 +599,3 @@ http://<EC2-PUBLIC-IP>
 
 ---
 
-# Deployment Verification Checklist
-
-Before final submission:
-
-- [ ] Frontend container running
-- [ ] Backend container running
-- [ ] PostgreSQL container healthy
-- [ ] Application accessible through port 80
-- [ ] `/api/health` returns HTTP 200
-- [ ] Frontend communicates with backend
-- [ ] Backend communicates with PostgreSQL
-- [ ] PostgreSQL port is not publicly exposed
-- [ ] Named volume exists
-- [ ] Database records survive container recreation
-- [ ] Docker image sizes recorded
-- [ ] Docker history captured
-- [ ] Docker Compose configuration verified
